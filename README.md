@@ -8,8 +8,11 @@
 -주요 적용 기술 및 구조
 
 개발 환경: Windows 10, Ubuntu (AWS EC2 서버), Google Colab
+
 개발 도구: Visual Studio Code, Git Bash
+
 개발 언어: Python, JavaScript
+
 주요 기술: Flask, AWS EC2, AWS SNS  
 
 -기대효과
