@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>가속도 데이터 라벨링</title>
+    <meta charset="utf-8">
+    <style>
+        table { border-collapse: collapse; width: 100%; }
+        th, td { border: 1px solid #ccc; padding: 8px; text-align: center; }
+        th { background-color: #f2f2f2; }
+    </style>
+    <script>
+        function submitLabel(form, index) {
+            const formData = new FormData(form);
+            fetch("/label", {
+                method: "POST",
+                body: formData
+            }).then(() => {
+                document.getElementById("label-" + index).innerText = form.label.value;
+            });
+            return false;
+        }
+    </script>
+</head>
+<body>
+    <h1>가속도 + GPS 데이터 라벨링</h1>
+    <table>
+        <tr>
+            <th>Timestamp</th>
+            <th>Accel X</th>
+            <th>Accel Y</th>
+            <th>Accel Z</th>
+            <th>Impact</th>
+            <th>Latitude</th>
+            <th>Longitude</th>
+            <th>Label</th>
+            <th>Action</th>
+        </tr>
+        {% for d in data %}
+        <tr>
+            <td>{{ d.timestamp }}</td>
+            <td>{{ d.accel_x }}</td>
+            <td>{{ d.accel_y }}</td>
+            <td>{{ d.accel_z }}</td>
+            <td>{{ d.impact }}</td>
+            <td>{{ d.latitude }}</td>
+            <td>{{ d.longitude }}</td>
+            <td id="label-{{ loop.index0 }}">{{ d.label or "None" }}</td>
+            <td>
+                <form onsubmit="return submitLabel(this, {{ loop.index0 }});">
+                    <input type="hidden" name="index" value="{{ loop.index0 }}">
+                    <select name="label">
+                        <option value="Normal">Normal</option>
+                        <option value="Warning">Warning</option>
+                        <option value="Danger">Danger</option>
+                    </select>
+                    <input type="submit" value="Submit">
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <div style="margin-top: 20px;">
+        <button onclick="location.href='/download'">CSV 파일 다운로드</button>
+    </div>
+</body>
+</html>
